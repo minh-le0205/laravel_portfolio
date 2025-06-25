@@ -27,6 +27,11 @@ Route::get('/dashboard', function () {
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    // About Management
+    Route::get('/about', [App\Http\Controllers\Admin\AboutController::class, 'edit'])->name('admin.about.edit');
+    Route::put('/about', [App\Http\Controllers\Admin\AboutController::class, 'update'])->name('admin.about.update');
+    Route::delete('/about/resume', [App\Http\Controllers\Admin\AboutController::class, 'deleteResume'])->name('admin.about.delete-resume');
 });
 
 // Profile routes

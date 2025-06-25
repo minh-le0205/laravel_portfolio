@@ -29,8 +29,8 @@
                         <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
                             <h4 class="font-medium mb-2">About</h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400">Edit your profile information</p>
-                            <a href="#" class="text-blue-600 dark:text-blue-400 text-sm mt-2 inline-block">Manage
-                                →</a>
+                            <a href="{{ route('admin.about.edit') }}"
+                                class="text-blue-600 dark:text-blue-400 text-sm mt-2 inline-block">Manage →</a>
                         </div>
                     </div>
                 </div>

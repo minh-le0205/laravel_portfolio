@@ -117,14 +117,39 @@
 
     @push('scripts')
         <script>
+            console.log('About page scripts loaded!');
+
             // Make sure DOM is loaded
             document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM Content Loaded');
                 // Initialize file input handler
-                document.querySelector('input[type="file"]').addEventListener('change', function(e) {
-                    const fileName = e.target.files[0]?.name || 'No file chosen';
-                    document.getElementById('file-name').textContent = fileName;
-                });
+                const fileInput = document.querySelector('input[type="file"]');
+                if (fileInput) {
+                    fileInput.addEventListener('change', function(e) {
+                        const fileName = e.target.files[0]?.name || 'No file chosen';
+                        const fileNameElement = document.getElementById('file-name');
+                        if (fileNameElement) {
+                            fileNameElement.textContent = fileName;
+                        }
+                    });
+                }
+
+                // Initialize skills container
+                initializeSkills();
             });
+
+            function initializeSkills() {
+                const container = document.getElementById('skills-container');
+                if (!container) {
+                    console.error('Skills container not found');
+                    return;
+                }
+
+                // Ensure at least one skill input exists
+                if (container.children.length === 0) {
+                    addSkill();
+                }
+            }
 
             function addSkill() {
                 const container = document.getElementById('skills-container');
@@ -134,25 +159,60 @@
                 }
 
                 const skillInput = document.createElement('div');
-                skillInput.className = 'flex gap-3';
+                skillInput.className = 'flex gap-3 opacity-0 transform translate-y-3';
                 skillInput.innerHTML = `
-                <input type="text"
-                    name="skills[]"
-                    class="block w-full rounded-lg border-[#6366F1] focus:border-[#6366F1] focus:ring-[#6366F1]"
-                    required>
-                <button type="button"
-                    onclick="removeSkill(this)"
-                    class="px-4 py-2 bg-[#EF4444] text-white rounded-lg hover:bg-red-600">
-                    Remove
-                </button>
-            `;
+                    <input type="text"
+                        name="skills[]"
+                        class="block w-full rounded-lg border-[#6366F1] focus:border-[#6366F1] focus:ring-[#6366F1]"
+                        required
+                        placeholder="Enter a skill">
+                    <button type="button"
+                        onclick="removeSkill(this)"
+                        class="px-4 py-2 bg-[#EF4444] text-white rounded-lg hover:bg-red-600 transition duration-150">
+                        Remove
+                    </button>
+                `;
                 container.appendChild(skillInput);
+
+                // Trigger reflow for animation
+                skillInput.offsetHeight;
+
+                // Add animation classes
+                skillInput.classList.add('transition-all', 'duration-300', 'ease-out');
+                requestAnimationFrame(() => {
+                    skillInput.classList.remove('opacity-0', 'translate-y-3');
+                });
+
+                // Focus the new input
+                const input = skillInput.querySelector('input');
+                if (input) {
+                    input.focus();
+                }
             }
 
             function removeSkill(button) {
                 const container = document.getElementById('skills-container');
+                if (!container) return;
+
+                const skillDiv = button.closest('.flex');
+                if (!skillDiv) return;
+
                 if (container.children.length > 1) {
-                    button.closest('.flex').remove();
+                    // Add animation classes
+                    skillDiv.classList.add('transition-all', 'duration-300', 'ease-out', 'opacity-0', 'transform',
+                        'translate-y-3');
+
+                    // Remove after animation
+                    setTimeout(() => {
+                        skillDiv.remove();
+                    }, 300);
+                } else {
+                    // If it's the last skill, just clear the input
+                    const input = skillDiv.querySelector('input');
+                    if (input) {
+                        input.value = '';
+                        input.focus();
+                    }
                 }
             }
         </script>
